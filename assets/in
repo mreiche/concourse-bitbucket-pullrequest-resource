@@ -95,13 +95,9 @@ fi
 
 log "Cloning $uri in $destination"
 set -x
-
-git clone $depthflag "$uri" "$destination"
-cd "$destination"
-
-git fetch $depthflag origin "${prq_from_branch}"
-git checkout -B "${prq_from_branch}" "origin/${prq_from_branch}"
+git clone $depthflag --branch "$prq_from_branch" "$uri" "$destination"
 set +x
+cd "$destination"
 ref=$(git rev-parse HEAD)
 
 invalid_key() {
