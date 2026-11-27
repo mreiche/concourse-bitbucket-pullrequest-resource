@@ -85,7 +85,7 @@ Submodules are initialized and updated recursively.
 
 Note: the name of the branch from which the pull request has been created is stored in the special git config `pullrequest.branch` so that you can use it as reference in your pipeline.
 
-The `in` step also exposes the branch names as `source_branch` and `target_branch` metadata.
+The `in` and `out` steps also expose the branch names as `source_branch` and `target_branch` metadata.
 
 #### Parameters
 
