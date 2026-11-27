@@ -82,6 +82,7 @@ ls_remote=$(git ls-remote "$uri")
 # included cat to catch error
 prq_number=$(git config --get pullrequest.id | cat)
 branch=$(git config --get pullrequest.branch | cat)
+target_branch=$(git config --get pullrequest.targetbranch | cat)
 
 if [ -z "$prq_number" ]; then
   prqs=$(echo "$ls_remote" | grep -E "/pull\-requests/[0-9]+" | grep "$merge_commit" | cat)
@@ -194,7 +195,11 @@ if [ -z "$commented" ]; then
   bitbucket_pullrequest_add_comment_status "$repo_host" "$repo_project" "$repo_name" "$prq_number" "$comment_message" "" "$skip_ssl_verification" >/dev/null
 fi
 
-jq -n "{
+jq -n \
+  --arg source_branch "$branch" \
+  --arg target_branch "$target_branch" \
+  --argjson metadata "$(pullrequest_metadata "$prq_number" "$uri" "$skip_ssl_verification" "$source_commit" "$target_commit")" \
+"{
   version: {
     id: \"$prq_number\",
     from: \"$source_commit\",
@@ -202,5 +207,8 @@ jq -n "{
     date: \"$prq_verify_date\",
     change: \"$prq_change\"
   },
-  metadata: $(pullrequest_metadata "$prq_number" "$uri" "$skip_ssl_verification" "$source_commit" "$target_commit")
+  metadata: (\$metadata + [
+    {name: \"source_branch\", value: \$source_branch},
+    {name: \"target_branch\", value: \$target_branch}
+  ])
 }" >&3

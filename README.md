@@ -16,9 +16,9 @@ Use this resource by adding the following to the `resource_types` section of a p
 ---
 resource_types:
 - name: concourse-bitbucket-pullrequest
-  type: docker-image
+  type: registry-image
   source:
-    repository: emeraldsquad/concourse-bitbucket-pullrequest-resource
+    repository: mreiche/concourse-bitbucket-pullrequest-resource
 ```
 
 See [concourse docs](http://concourse.ci/configuring-resource-types.html) for more details on adding `resource_types` to a pipeline config.
@@ -85,6 +85,8 @@ Submodules are initialized and updated recursively.
 
 Note: the name of the branch from which the pull request has been created is stored in the special git config `pullrequest.branch` so that you can use it as reference in your pipeline.
 
+The `in` and `out` steps also expose the branch names as `source_branch` and `target_branch` metadata.
+
 #### Parameters
 
 * `depth`: *Optional.* If a positive integer is given, *shallow* clone the repository using the `--depth` option. Using this flag voids your warranty.
@@ -122,9 +124,9 @@ Set the status message on specified pull request.
 ```yaml
 resource_types:
 - name: concourse-bitbucket-pullrequest
-  type: docker-image
+  type: registry-image
   source:
-    repository: emeraldsquad/concourse-bitbucket-pullrequest-resource
+    repository: mreiche/concourse-bitbucket-pullrequest-resource
 
 resources:
 - name: pullrequest
